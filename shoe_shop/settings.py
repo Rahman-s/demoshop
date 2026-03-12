@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,8 +123,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Ye line zaroori hai
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -131,11 +133,23 @@ LOGOUT_REDIRECT_URL = '/'  # '/' matlab home page
 
 
 # File ke bilkul niche ye settings add karein
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'datf8s7js',
-    'API_KEY': '569227694159444',
-    'API_SECRET': 'MtCdj4qSubvk8_Ome-vveDEW2zs'
-}
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-local-key-123')
+
+# --- DEBUG ---
+# Live hone par DEBUG hamesha False hona chahiye security ke liye
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+
+# --- CLOUDINARY CONFIG ---
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+cloudinary.config(
+    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key = os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
+    secure = True
+)
 
 # Media files ke liye Cloudinary ko default storage banayein
 # Purani line (DEFAULT_FILE_STORAGE) ko delete kar dein aur ye likhein:
