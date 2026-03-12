@@ -11,4 +11,4 @@ class Shoe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) # Yeh field missing thi
 
     def __str__(self):
-        return self.name
+        return f"{self.brand} - {self.name}"
