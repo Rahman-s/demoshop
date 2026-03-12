@@ -4,13 +4,9 @@ from pathlib import Path
 # Base Directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- SECURITY (HIDE KEYS) ---
-# Ye Render ke dashboard se key uthayega
+# --- SECURITY ---
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-local-key-123')
-
-# Debug True/False variable se handle hoga
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-
 ALLOWED_HOSTS = ['*']
 
 # --- APPS ---
@@ -23,13 +19,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'catalog', # Aapka App
+    'catalog', 
 ]
 
-# --- MIDDLEWARE (WhiteNoise for CSS) ---
+# --- MIDDLEWARE ---
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Isse Admin CSS fix hogi
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -69,7 +65,6 @@ DATABASES = {
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Storage Logic: Cloudinary for Images, WhiteNoise for CSS/JS
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
@@ -81,12 +76,15 @@ STORAGES = {
 
 # --- CLOUDINARY CONFIG ---
 import cloudinary
-cloudinary.config(
-    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    api_key = os.environ.get('CLOUDINARY_API_KEY'),
-    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
-    secure = True
-)
+import cloudinary.uploader
+import cloudinary.api
+
+# settings.py mein ye format rakhein
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
 
 # Standard Settings
 LANGUAGE_CODE = 'en-us'
