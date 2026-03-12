@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOE HUB | Premium Footwear</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --accent: #ff4757; --dark: #121212; }
+        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+
+        /* Navbar Detail */
+        .navbar { background: rgba(0,0,0,0.8) !important; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .navbar-brand { font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 2px; }
+
+        /* Banner Video Detail */
+        .hero-section { height: 85vh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+        .hero-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); position: absolute; width: 100%; height: 100%; }
+        .hero-content { color: white; text-align: center; position: relative; z-index: 2; }
+        .hero-content h1 { font-family: 'Montserrat', sans-serif; font-size: 5rem; font-weight: 700; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+
+        /* Product Cards Auto-Frame Detail */
+        .shoe-card { border: none; background: #fff; transition: 0.4s; border-radius: 0; }
+        .img-box { 
+            height: 320px; background: #f8f8f8; display: flex; align-items: center; 
+            justify-content: center; overflow: hidden; position: relative; padding: 30px;
+        }
+        .img-box img { 
+            max-width: 100%; max-height: 100%; object-fit: contain; 
+            transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .shoe-card:hover .img-box img { transform: scale(1.1) rotate(-8deg); }
+        
+        /* Floating Badge */
+        .badge-new { position: absolute; top: 15px; left: 15px; background: var(--dark); color: white; padding: 5px 15px; font-size: 0.7rem; font-weight: bold; }
+
+        /* Buttons */
+        .btn-premium { border-radius: 0; padding: 12px 30px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .btn-whatsapp { background: #25d366; color: white; border: none; }
+        .btn-whatsapp:hover { background: #1eb954; transform: translateY(-3px); color: white; }
+
+        /* Footer Detail */
+        footer { background: var(--dark); color: #888; padding: 80px 0 20px; }
+        footer h5 { color: white; font-family: 'Montserrat', sans-serif; margin-bottom: 25px; }
+        .footer-link { color: #888; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
+        .footer-link:hover { color: white; padding-left: 5px; }
+        .social-icons a { color: white; font-size: 1.5rem; margin-right: 20px; transition: 0.3s; }
+        .social-icons a:hover { color: var(--accent); }
+        /* Floating WhatsApp Button Styling */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.whatsapp-float:hover {
+    background-color: #128c7e;
+    transform: scale(1.1);
+    color: #FFF;
+}
+
+/* Mobile responsive ke liye thoda chota */
+@media screen and (max-width: 767px) {
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 25px;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">SHOE HUB</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#collection">New Arrivals</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="btn btn-outline-light btn-sm ms-lg-3" href="/admin">Dashboard</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/admin">Owner Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        {% if shoes.0.banner_video %}
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="{{ shoes.0.banner_video.url }}" type="video/mp4">
+            </video>
+        {% else %}
+            <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3" class="hero-video" alt="Default Banner">
+        {% endif %}
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="display-1 fw-bold">STEP INTO FUTURE</h1>
+            <p class="fs-4 fw-light mb-4">Quality, Comfort & Style Combined.</p>
+            <a href="#collection" class="btn btn-light btn-premium px-5">Explore Collection</a>
+        </div>
+    </section>
+
+    <div class="container my-5">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="display-6 fw-bold m-0" id="collection">Our Collection</h2>
+            </div>
+            <div class="col-md-6 mt-3 mt-md-0">
+                <form action="" method="GET" class="d-flex">
+                    <input type="text" name="q" class="form-control border-dark rounded-0" placeholder="Search brands, names...">
+                    <button class="btn btn-dark rounded-0 px-4" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row g-4">
+            {% for shoe in shoes %}
+            <div class="col-md-4">
+                <div class="card h-100 shoe-card">
+                    <div class="img-box">
+                        {% if forloop.first %} <span class="badge-new">NEW</span> {% endif %}
+                        <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}">
+                    </div>
+                    <div class="card-body p-4">
+                        <span class="text-muted small text-uppercase">{{ shoe.brand }}</span>
+                        <h4 class="fw-bold my-2">{{ shoe.name }}</h4>
+                        <h5 class="text-danger fw-bold mb-4">₹{{ shoe.price }}</h5>
+                        <div class="d-grid gap-2">
+                            <a href="https://wa.me/91638709529?text=Hi! I am looking for premium shoes." class="whatsapp-float" target="_blank">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <a href="{% url 'shoe_detail' shoe.pk %}" class="btn btn-outline-dark btn-premium">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-search fa-3x mb-3 text-muted"></i>
+                <h3>No products found!</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-white">SHOE HUB</h5>
+                    <p>India's most trusted premium footwear destination. We bring the latest trends directly to your doorstep.</p>
+                    <div class="social-icons mt-4">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Quick Links</h5>
+                    <a href="#" class="footer-link">Home</a>
+                    <a href="#collection" class="footer-link">New Arrivals</a>
+                    <a href="/admin" class="footer-link">Owner Login</a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Support</h5>
+                    <p class="small mb-1"><i class="fas fa-phone me-2"></i> +91 98765 43210</p>
+                    <p class="small mb-1"><i class="fas fa-envelope me-2"></i> support@shoehub.com</p>
+                    <p class="small"><i class="fas fa-map-marker-alt me-2"></i> Delhi, India</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Newsletter</h5>
+                    <p class="small">Latest drops ke liye subscribe karein.</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-dark border-secondary text-white rounded-0" placeholder="Email">
+                        <button class="btn btn-light rounded-0">Go</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-5 border-secondary">
+            <div class="text-center small">
+                <p>&copy; 2026 SHOE HUB. All Rights Reserved. Designed for Excellence.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
