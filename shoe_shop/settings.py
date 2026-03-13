@@ -65,17 +65,18 @@ DATABASES = {
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Force fix for old libraries
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        # Is line ko change karein (Manifest hata kar sirf StaticFilesStorage rakhein)
+        "BACKEND": "whitenoise.storage.StaticFilesStorage", 
     },
 }
+
+# Neeche wali force-fix line ko bhi update kar dein agar pehle likhi thi:
+STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 # --- CLOUDINARY CONFIG ---
 import cloudinary
@@ -95,4 +96,5 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
