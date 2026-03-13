@@ -86,6 +86,13 @@
         right: 20px;
         font-size: 25px;
     }
+    /* Isse photo banner ke size mein auto-crop (fill) ho jayegi */
+.hero-img-fit {
+    object-fit: cover; 
+    object-position: center;
+    width: 100%;
+    height: 100%;
+}
 }
     </style>
 </head>
@@ -103,29 +110,34 @@
                     {% if user.is_authenticated %}
                         <li class="nav-item"><a class="btn btn-outline-light btn-sm ms-lg-3" href="/admin">Dashboard</a></li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="/admin">Owner Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/">Owner Login</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="hero-section">
-        {% if shoes.0.banner_video %}
+    
+<section class="hero-section">
+    {% if shoes.0.banner_video %}
+        {% if ".mp4" in shoes.0.banner_video.url or ".mov" in shoes.0.banner_video.url %}
             <video autoplay muted loop playsinline class="hero-video">
                 <source src="{{ shoes.0.banner_video.url }}" type="video/mp4">
             </video>
         {% else %}
-            <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3" class="hero-video" alt="Default Banner">
+            <img src="{{ shoes.0.banner_video.url }}" class="hero-video hero-img-fit" alt="Banner Image">
         {% endif %}
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1 class="display-1 fw-bold">STEP INTO FUTURE</h1>
-            <p class="fs-4 fw-light mb-4">Quality, Comfort & Style Combined.</p>
-            <a href="#collection" class="btn btn-light btn-premium px-5">Explore Collection</a>
-        </div>
-    </section>
-
+    {% else %}
+        <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3" class="hero-video hero-img-fit" alt="Default Banner">
+    {% endif %}
+    
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="display-1 fw-bold">STEP INTO FUTURE</h1>
+        <p class="fs-4 fw-light mb-4">Quality, Comfort & Style Combined.</p>
+        <a href="#collection" class="btn btn-light btn-premium px-5">Explore Collection</a>
+    </div>
+</section>
     <div class="container my-5">
         <div class="row align-items-center">
             <div class="col-md-6">
@@ -213,4 +225,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
